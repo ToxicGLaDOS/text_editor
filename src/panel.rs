@@ -1,6 +1,7 @@
 use crate::document;
 use crate::cursor;
 use crate::graphics::Transformed;
+use crate::unicode_segmentation::UnicodeSegmentation;
 
 pub struct Panel {
     pub document: document::Document,
@@ -51,6 +52,7 @@ impl Panel {
 
         for logical_line in self.lines.iter() {
             let physical_lines = logical_line.get_physical_lines(glyphs, FONT_SIZE, self.size[0]);
+            println!("{} physical lines", physical_lines.len());
             for (i, physical_line) in physical_lines.iter().enumerate() {
                 
                 let text = graphics::text::Text::new_color(RED, FONT_SIZE);
@@ -76,7 +78,7 @@ impl Panel {
 impl LogicalLine {
     pub fn new() -> LogicalLine {
         LogicalLine{
-            text: String::new()
+            text: String::from("😀")
         }
     }
 
@@ -97,21 +99,23 @@ impl LogicalLine {
     }
 
     fn get_physical_line <C: graphics::CharacterCache>(&self, start: usize, glyphs: &mut C, font_size: u32, width: f64) -> (usize, &str) {
-        let mut line = String::new();
-        let chars = self.text.chars();
-        let mut chars = chars.skip(start);
+        let graphemes = self.text.graphemes(true);
         let mut end = start;
 
-        while let Some(c) = chars.next(){
-            end += 1;
-            line.push(c);
-            if let Ok(line_width) = glyphs.width(font_size, line.as_str()){
-                if line_width > width {
+        let mut graphemes = graphemes.skip(start);
+
+        while let Some(g) = graphemes.next(){
+            end += g.len();
+            if let Ok(line_width) = glyphs.width(font_size, &self.text[start..end]){
+                if line_width > width{
                     break;
                 }
-            } 
+            }
+            else{
+                panic!("Couldn't get width of text");
+            }
         }
-        
+
         (end, &self.text[start..end])
     }
 

@@ -2,16 +2,21 @@ extern crate glutin_window;
 extern crate graphics;
 extern crate opengl_graphics;
 extern crate piston;
+extern crate unicode_segmentation;
 
 use glutin_window::GlutinWindow as Window;
 use opengl_graphics::{GlGraphics, OpenGL, GlyphCache, TextureSettings, Filter};
 use piston::event_loop::{EventSettings, Events};
 use piston::input::{RenderArgs, RenderEvent, UpdateArgs, UpdateEvent, Event::Input, Input as InputTypes, Button, ButtonState, Key};
 use piston::window::*;
+use unicode_segmentation::*;
 
 mod document;
 mod panel;
 mod cursor;
+//const FONT_PATH: &str = "assets/Noto/NotoColorEmoji.ttf";
+//const FONT_PATH: &str = "assets/Noto/NotoEmoji-Regular.ttf";
+const FONT_PATH: &str = "assets/FiraCode-Regular.ttf";
 
 pub struct App {
     gl: GlGraphics, // OpenGL drawing backend.
@@ -33,10 +38,9 @@ impl App {
         // are the stuff that would go above the line when writing on ruled paper
         // and the rest of the pixels are for stuff below it (like for the bottom of j)
         let line_height = FONT_SIZE as f64 * (4.0 / 3.0);
-
         let (x, y) = (args.window_size[0] / 2.0, args.window_size[1] / 2.0);
         let texture_settings = TextureSettings::new().filter(Filter::Nearest);
-        let ref mut glyphs = GlyphCache::new("assets/FiraCode-Regular.ttf", (), texture_settings).expect("Could not load font");
+        let ref mut glyphs = GlyphCache::new(FONT_PATH, (), texture_settings).expect("Could not load font");
         let panel_iterator = self.panels.iter();
        
         self.gl.draw(args.viewport(), |c, gl| {

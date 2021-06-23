@@ -1370,6 +1370,7 @@ dependencies = [
  "piston2d-graphics",
  "piston2d-opengl_graphics",
  "pistoncore-glutin_window",
+ "unicode-segmentation",
 ]
 
 [[package]]
@@ -1417,6 +1418,12 @@ name = "ttf-parser"
 version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3e5d7cd7ab3e47dda6e56542f4bbf3824c15234958c6e1bd6aaa347e93499fdc"
+
+[[package]]
+name = "unicode-segmentation"
+version = "1.7.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bb0d2e7be6ae3a5fa87eed5fb451aff96f2573d2694942e40543ae0bbe19c796"
 
 [[package]]
 name = "unicode-xid"
